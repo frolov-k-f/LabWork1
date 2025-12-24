@@ -1,4 +1,4 @@
-/* 
+/*
  * Kirill Frolov
  * st141840@student.spbu.ru
  * LabWork1
@@ -14,7 +14,8 @@
 #include "px.h"
 
 #pragma pack(push, 1)
-struct BitmapFileHdr {
+struct BitmapFileHdr
+{
     uint16_t signature;
     uint32_t fileSize;
     uint16_t reserved1;
@@ -22,7 +23,8 @@ struct BitmapFileHdr {
     uint32_t pixelDataOffset;
 };
 
-struct BitmapInfoHdr {
+struct BitmapInfoHdr
+{
     uint32_t headerSize;
     int32_t  imageWidth;
     int32_t  imageHeight;
@@ -37,7 +39,8 @@ struct BitmapInfoHdr {
 };
 #pragma pack(pop)
 
-class Bitmap {
+class Bitmap
+{
     BitmapFileHdr fileHdr{};
     BitmapInfoHdr infoHdr{};
 

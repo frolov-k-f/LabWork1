@@ -1,4 +1,4 @@
-/* 
+/*
  * Kirill Frolov
  * st141840@student.spbu.ru
  * LabWork1

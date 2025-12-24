@@ -1,4 +1,4 @@
-/* 
+/*
  * Kirill Frolov
  * st141840@student.spbu.ru
  * LabWork1
@@ -12,7 +12,8 @@
 #include <vector>
 #include <string>
 
-class Image {
+class Image
+{
 public:
     virtual bool load(const std::string &path) = 0;
     virtual bool save(const std::string &path) const = 0;
@@ -23,7 +24,8 @@ public:
     virtual ~Image() = default;
 };
 
-class BitmapImage : public Image {
+class BitmapImage : public Image
+{
     int imgWidth = 0, imgHeight = 0;
     std::vector<Px> pixelData;
     Bitmap meta;

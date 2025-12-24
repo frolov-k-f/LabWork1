@@ -1,4 +1,4 @@
-/* 
+/*
  * Kirill Frolov
  * st141840@student.spbu.ru
  * LabWork1
@@ -11,12 +11,25 @@
 #include <cstring>
 #include "px.h"
 
-int BitmapImage::width() const { return imgWidth; }
-int BitmapImage::height() const { return imgHeight; }
-std::vector<Px>& BitmapImage::data() { return pixelData; }
-const std::vector<Px>& BitmapImage::data() const { return pixelData; }
+int BitmapImage::width() const
+{
+    return imgWidth;
+}
+int BitmapImage::height() const
+{
+    return imgHeight;
+}
+std::vector<Px>& BitmapImage::data()
+{
+    return pixelData;
+}
+const std::vector<Px>& BitmapImage::data() const
+{
+    return pixelData;
+}
 
-void BitmapImage::setSize(int ww, int hh) {
+void BitmapImage::setSize(int ww, int hh)
+{
     imgWidth = ww;
     imgHeight = hh;
     pixelData.assign(static_cast<size_t>(imgWidth) * static_cast<size_t>(imgHeight), Px{0,0,0});
@@ -24,17 +37,21 @@ void BitmapImage::setSize(int ww, int hh) {
     meta.refreshSizes(imgWidth, imgHeight);
 }
 
-bool BitmapImage::load(const std::string &path) {
+bool BitmapImage::load(const std::string &path)
+{
     std::ifstream in(path, std::ios::binary);
-    if (!in) {
+    if (!in)
+    {
         std::cerr << "BitmapImage::load: cannot open file: " << path << "\n";
         return false;
     }
-    if (!meta.read(in)) {
+    if (!meta.read(in))
+    {
         std::cerr << "BitmapImage::load: failed to read header\n";
         return false;
     }
-    if (!meta.isValid()) {
+    if (!meta.isValid())
+    {
         std::cerr << "BitmapImage::load: invalid or unsupported BMP header\n";
         return false;
     }
@@ -47,14 +64,17 @@ bool BitmapImage::load(const std::string &path) {
     pixelData.assign(static_cast<size_t>(imgWidth) * static_cast<size_t>(imgHeight), Px{0,0,0});
     bool bottomUp = meta.isStoredBottomUp();
 
-    for (int y = 0; y < imgHeight; ++y) {
+    for (int y = 0; y < imgHeight; ++y)
+    {
         in.read(reinterpret_cast<char*>(row.data()), rowSize);
-        if (!in) {
+        if (!in)
+        {
             std::cerr << "BitmapImage::load: unexpected EOF while reading pixel data\n";
             return false;
         }
         int targetRow = bottomUp ? (imgHeight - 1 - y) : y;
-        for (int x = 0; x < imgWidth; ++x) {
+        for (int x = 0; x < imgWidth; ++x)
+        {
             int src = x * 3;
             Px p;
             p.blue = row[static_cast<size_t>(src) + 0];
@@ -66,13 +86,16 @@ bool BitmapImage::load(const std::string &path) {
     return true;
 }
 
-bool BitmapImage::save(const std::string &path) const {
-    if (imgWidth <= 0 || imgHeight <= 0) {
+bool BitmapImage::save(const std::string &path) const
+{
+    if (imgWidth <= 0 || imgHeight <= 0)
+    {
         std::cerr << "BitmapImage::save: invalid image size\n";
         return false;
     }
     std::ofstream out(path, std::ios::binary);
-    if (!out) {
+    if (!out)
+    {
         std::cerr << "BitmapImage::save: cannot open file for writing: " << path << "\n";
         return false;
     }
@@ -81,7 +104,8 @@ bool BitmapImage::save(const std::string &path) const {
     outMeta.initializeDefaults(imgWidth, imgHeight);
     outMeta.refreshSizes(imgWidth, imgHeight);
 
-    if (!outMeta.write(out)) {
+    if (!outMeta.write(out))
+    {
         std::cerr << "BitmapImage::save: failed to write header\n";
         return false;
     }
@@ -89,9 +113,11 @@ bool BitmapImage::save(const std::string &path) const {
     int rowSize = outMeta.bytesPerRow(imgWidth);
     std::vector<uint8_t> row(static_cast<size_t>(rowSize));
 
-    for (int y = imgHeight - 1; y >= 0; --y) {
+    for (int y = imgHeight - 1; y >= 0; --y)
+    {
         std::fill(row.begin(), row.end(), 0);
-        for (int x = 0; x < imgWidth; ++x) {
+        for (int x = 0; x < imgWidth; ++x)
+        {
             const Px &p = pixelData[static_cast<size_t>(y) * static_cast<size_t>(imgWidth) + static_cast<size_t>(x)];
             int idx = x * 3;
             row[static_cast<size_t>(idx) + 0] = p.blue;
@@ -99,7 +125,8 @@ bool BitmapImage::save(const std::string &path) const {
             row[static_cast<size_t>(idx) + 2] = p.red;
         }
         out.write(reinterpret_cast<const char*>(row.data()), rowSize);
-        if (!out) {
+        if (!out)
+        {
             std::cerr << "BitmapImage::save: failed while writing row\n";
             return false;
         }
