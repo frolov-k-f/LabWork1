@@ -81,5 +81,7 @@ void Bitmap::refreshSizes(int w, int h)
 
 int Bitmap::bytesPerRow(int w) const
 {
-    return ((w * 3 + 3) / 4) * 4;
+    const int bytesForPixel = 3;
+    const int lining = 4;          
+    return ((w * bytesForPixel + (lining - 1)) / lining) * lining;
 }
